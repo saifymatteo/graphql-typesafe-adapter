@@ -19,6 +19,10 @@ mixin GqlResponseConfig {
   /// Type name, have to follow APIs' docs
   String get typename;
 
+
+  /// Optional flag to include `__typename` in props. Default to `false`
+  bool get includeTypename => false;
+
   /// All available properties. Will return [StateError] if empty.
   List<GqlProp> properties();
 
@@ -39,8 +43,10 @@ mixin GqlResponseConfig {
       throw StateError('No element');
     }
 
-    // TODO: Optional __typename
-    final fields = ['__typename', ...props].reduce((v, e) => '$v $e');
+    final fields = [
+      if (includeTypename) '__typename',
+      for (final p in props) p.toString(names),
+    ].reduce((v, e) => '$v $e');
 
     return 'fragment $fragmentName on $typename { $fields }';
   }

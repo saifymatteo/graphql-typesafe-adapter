@@ -58,9 +58,19 @@ void main() {
       );
       print(doc);
       expect(doc, contains('query $queryName'));
-      expect(doc, contains('users ( after: "$argEmail", first: $argFirstEntry ) { ... UserConnection }'));
-      expect(doc, contains('fragment UserConnection on UserConnection { __typename totalCount pageInfo { ... PageInfo } }'));
-      expect(doc, contains('fragment PageInfo on PageInfo { __typename hasNextPage }'));
+      expect(
+        doc,
+        contains(
+          'users ( after: "$argEmail", first: $argFirstEntry ) { ... UserConnection }',
+        ),
+      );
+      expect(
+        doc,
+        contains(
+          'fragment UserConnection on UserConnection { totalCount pageInfo { ... PageInfo } }',
+        ),
+      );
+      expect(doc, contains('fragment PageInfo on PageInfo { hasNextPage }'));
     });
 
     test('fragment declaration is present once despite nested usage', () {
@@ -146,19 +156,19 @@ void main() {
         ),
       );
       // Fragment: User
-      expect(doc, contains('fragment User on User { __typename id uid name }'));
+      expect(doc, contains('fragment User on User { id uid name }'));
       // Fragment: UserConnection
       expect(
         doc,
         contains(
-          'fragment UserConnection on UserConnection { __typename totalCount pageInfo { ... PageInfo } }',
+          'fragment UserConnection on UserConnection { totalCount pageInfo { ... PageInfo } }',
         ),
       );
       // Fragment: PageInfo
       expect(
         doc,
         contains(
-          'fragment PageInfo on PageInfo { __typename hasNextPage hasPreviousPage }',
+          'fragment PageInfo on PageInfo { hasNextPage hasPreviousPage }',
         ),
       );
     });
@@ -207,15 +217,13 @@ void main() {
       expect(
         doc,
         contains(
-          'fragment AskPayload on AskPayload { __typename model price variants { ... AskVariant } }',
+          'fragment AskPayload on AskPayload { model price variants { ... AskVariant } }',
         ),
       );
       // Fragment: AskVariant
       expect(
         doc,
-        contains(
-          'fragment AskVariant on AskVariant { __typename role content }',
-        ),
+        contains('fragment AskVariant on AskVariant { role content }'),
       );
     });
   });

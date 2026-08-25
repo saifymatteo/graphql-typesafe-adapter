@@ -11,7 +11,7 @@ mixin GqlRequestInputConfig {
   String toGraphQlInput() {
     final flatten = arguments().entries
         .map((e) => '${e.key}: ${formatArgInputValue(e.value)}')
-        .reduce((v, e) => '$v, $e');
+        .join(', ');
 
     return '{ $flatten }';
   }
