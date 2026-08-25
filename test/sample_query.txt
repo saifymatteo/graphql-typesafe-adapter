@@ -1,0 +1,56 @@
+Taken from https://caia.app/api
+
+query query {
+  me {
+    ... User
+  }
+  user (email: "user@example.com") {
+    ... User
+  }
+  users (after: "100", first: 100) {
+    ... UserConnection
+  }
+}
+
+fragment User on User {
+  id
+  uid
+  name
+}
+
+fragment UserConnection on UserConnection {
+  totalCount
+  pageInfo {
+    ... PageInfo
+  }
+}
+
+fragment PageInfo on PageInfo {
+  hasNextPage
+  hasPreviousPage
+}
+
+mutation mutate {
+  ask (input: {
+    messages: [{
+      role: User
+      content: "Hello"
+    }]
+  }) {
+    ... AskPayload
+  }
+  getUploadURL (fileName: "banana.png", contentType: "image")
+}
+
+fragment AskPayload on AskPayload {
+  model
+  price
+  variants {
+    ... AskVariant
+  }
+}
+
+fragment AskVariant on AskVariant {
+  role
+  content
+}
