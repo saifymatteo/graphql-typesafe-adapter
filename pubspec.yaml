@@ -1,0 +1,17 @@
+name: graphql_typesafe_adapter
+description: Dart and Flutter package to handle type-safe GraphQL queries and mutation with Type Fragment.
+publish_to: https://pub.dev/
+repository: https://github.com/saifymatteo/graphql-typesafe-adapter
+
+version: 0.6.0
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  logging: ^1.3.0
+  meta: ^1.19.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
