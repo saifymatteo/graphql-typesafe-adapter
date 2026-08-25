@@ -102,9 +102,34 @@ void main() {
           ),
         ],
       );
-      print('doc: $doc');
+      print(doc);
       // Two similar requests: second User fragment is renamed to avoid collision.
       expect(doc, contains('fragment User_2 on User'));
+    });
+
+    test('is idempotent when the same configs are reused across builds', () {
+      // Regression: the renderer must not mutate the caller's configs, so
+      // building the same document twice produces identical output.
+      final shared = UserResponseConfig(includeName: true);
+      final requests = [
+        MeQuery(responseConfig: shared),
+        UserQuery(email: argEmail, responseConfig: shared),
+      ];
+      final first = builder.query(queryName: queryName, requests: requests);
+      final second = builder.query(queryName: queryName, requests: requests);
+      expect(second, first);
+      // And a fresh set of equivalent configs still yields the same document.
+      final fresh = builder.query(
+        queryName: queryName,
+        requests: [
+          MeQuery(responseConfig: UserResponseConfig(includeName: true)),
+          UserQuery(
+            email: argEmail,
+            responseConfig: UserResponseConfig(includeName: true),
+          ),
+        ],
+      );
+      expect(fresh, first);
     });
   });
 

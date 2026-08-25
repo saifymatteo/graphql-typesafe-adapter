@@ -1,4 +1,4 @@
 import '../internals/internals.dart';
 
-/// Used only for identifier in [GqlFragmentGenerator.generateFragments]
+/// Used only as an identifier in [resolveFragments]
 mixin GqlErrorResponseConfig {}

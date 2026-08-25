@@ -36,17 +36,24 @@ class GqlProp {
   final String? key;
   final GqlResponseConfig? config;
 
-  @override
-  String toString() {
-    if (!key.isNullOrWhiteSpace && config != null) {
-      return '$key { ${config!.inlineFragment()} }';
+  /// Renders this property. [names] maps response configs to their resolved,
+  /// collision-free fragment names; when omitted falls back to each config's
+  /// own [GqlResponseConfig.fragmentName].
+  String render([Map<GqlResponseConfig, String>? names]) {
+    final c = config;
+    final name = c == null ? null : (names?[c] ?? c.fragmentName);
+    if (!key.isNullOrWhiteSpace && c != null) {
+      return '$key { ... $name }';
     }
     if (!key.isNullOrWhiteSpace) {
       return key!;
     }
-    if (config != null) {
-      return config!.inlineFragment();
+    if (c != null) {
+      return '... $name';
     }
     return '';
   }
+
+  @override
+  String toString([Map<GqlResponseConfig, String>? names]) => render(names);
 }

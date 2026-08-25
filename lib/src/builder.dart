@@ -19,8 +19,6 @@ import '../src/models/models.dart';
 /// await client.mutate(option);
 /// ```
 class GqlRequestBuilder {
-  final GqlFragmentGenerator _generator = GqlFragmentGenerator();
-
   /// {@template graphql_typesafe_adapter_base_builder}
   ///
   /// Assembles `query <name> { ... }` plus all required `fragment` blocks
@@ -37,12 +35,11 @@ class GqlRequestBuilder {
     final allFragments = requests
         .map((e) => e.allFragments())
         .reduce((v, e) => v + e);
-    final generatedFragments = _generator
-        .generateFragments(allFragments)
-        .join('\n');
-    // Let `generateFragments` run first before parse the queries
+    // Resolve fragments up front so inline spreads and definitions share names.
+    final resolved = resolveFragments(allFragments);
+    final generatedFragments = resolved.definitions.join('\n');
     final queries = requests
-        .map((e) => e.toGraphQlString())
+        .map((e) => e.toGraphQlString(resolved.names))
         .reduce((v, e) => '$v $e');
 
     return (queries: queries, fragments: generatedFragments);
@@ -66,7 +63,7 @@ class GqlRequestBuilder {
     if (queryName.trim().isEmpty) {
       throw StateError('Query name cannot be empty');
     }
-    final name = validateQueryName(queryName);
+    final name = sanitizeQuery(queryName);
     final builder = _builder(requests);
     return _compose('query', name, builder.queries, builder.fragments);
   }
@@ -79,7 +76,7 @@ class GqlRequestBuilder {
     if (mutationName.trim().isEmpty) {
       throw StateError('Query name cannot be empty');
     }
-    final name = validateQueryName(mutationName);
+    final name = sanitizeQuery(mutationName);
     final builder = _builder(requests);
     return _compose('mutation', name, builder.queries, builder.fragments);
   }

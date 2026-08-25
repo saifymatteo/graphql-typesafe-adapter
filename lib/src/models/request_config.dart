@@ -10,7 +10,7 @@ import '../builder.dart';
 abstract interface class GqlRequestConfig {
   List<GqlResponseConfig> allFragments();
   Map<String, dynamic> arguments();
-  String toGraphQlString();
+  String toGraphQlString([Map<GqlResponseConfig, String>? names]);
 }
 
 /// Used in [GqlRequestBuilder.query]
@@ -41,11 +41,13 @@ mixin GqlQueryRequestConfig implements GqlRequestConfig {
   /// Query raw String
   @nonVirtual
   @override
-  String toGraphQlString() => buildOperationString(
-    endpoint: queryName,
-    fragments: allFragments(),
-    args: arguments(),
-  );
+  String toGraphQlString([Map<GqlResponseConfig, String>? names]) =>
+      buildOperationString(
+        endpoint: queryName,
+        fragments: allFragments(),
+        args: arguments(),
+        names: names,
+      );
 }
 
 /// Used in [GqlRequestBuilder.mutate]
@@ -65,9 +67,11 @@ mixin GqlMutationRequestConfig implements GqlRequestConfig {
   /// Mutation raw String
   @nonVirtual
   @override
-  String toGraphQlString() => buildOperationString(
-    endpoint: mutationName,
-    fragments: allFragments(),
-    args: arguments(),
-  );
+  String toGraphQlString([Map<GqlResponseConfig, String>? names]) =>
+      buildOperationString(
+        endpoint: mutationName,
+        fragments: allFragments(),
+        args: arguments(),
+        names: names,
+      );
 }
