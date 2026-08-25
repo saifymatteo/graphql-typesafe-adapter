@@ -13,7 +13,7 @@ Intended to be use with [graphql](https://pub.dev/packages/graphql) package.
 > - example
 > - unit tests
 > - finding bugs
->
+> - [re-architecture](#re-architecture) (see below)
 
 ## Getting started
 
@@ -149,3 +149,9 @@ class UserResponseConfig with GqlResponseConfig {
   ];
 }
 ```
+
+## Re-Architecture
+
+DeepSeek v4 Flash in Pi harness combines with [improve-codebase-architecture skill by mattpocock](https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture) found the biggest friction in the codebase.
+
+Originally the codebase was stateful and have to mutates the caller's objects, which is the pain point that I haven't found a good way to solve. But DeepSeek and the skill [found and propose a better solution for that](https://github.com/saifymatteo/graphql-typesafe-adapter/commit/2323c8aeec75a970897251d5ca8d0bef57f5dda3).
