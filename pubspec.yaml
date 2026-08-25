@@ -3,7 +3,7 @@ description: Dart and Flutter package to handle type-safe GraphQL queries and mu
 publish_to: https://pub.dev/
 repository: https://github.com/saifymatteo/graphql-typesafe-adapter
 
-version: 0.6.0
+version: 1.0.0
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
