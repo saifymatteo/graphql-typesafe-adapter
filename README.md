@@ -2,18 +2,60 @@
 
 A simple package to wrap raw String into typesafe object for GraphQL.
 
-Intended to be use with [graphql](https://pub.dev/packages/graphql) package.
+Intended to be use with [graphql package](https://pub.dev/packages/graphql).
 
-## Disclaimer
+## Features
 
-> This package was ported from my company internal GraphQL API client in frontend. The company is closing down at the time of this writing. And the code was wholly hand-written by me.
->
-> This ported package was assisted with DeepSeek V4 Flash 0731 in [Pi Harness](https://pi.dev/). The AI usage was done on these parts:
->
-> - example
-> - unit tests
-> - finding bugs
-> - [re-architecture](#re-architecture) (see below)
+The package only wrap around classes to give typesafe object for [graphql package](https://pub.dev/packages/graphql). For comparison:
+
+<table>
+<tr>
+<td> graphql only </td> <td> + graphql_typesafe_adapter </td>
+</tr>
+<tr>
+<td>
+
+```dart
+gql(r'''
+  mutation AddStar($starrableId: ID!) {
+    addStar(input: {starrableId: $starrableId}) {
+      starrable {
+        viewerHasStarred
+      }
+    }
+  }
+''');
+```
+
+</td>
+<td>
+
+```dart
+gql(
+  GqlRequestBuilder().mutate(
+    mutationName: 'AddStar',
+    requests: [
+      AddStarMutate(
+        input: AddStarMutateInput(
+          id: yourId,
+        ),
+        responseConfig: StarrableResponseConfig(
+          includeViewerHasStarred: true,
+        ),
+      ),
+    ],
+  )
+);
+```
+
+</td>
+</tr>
+</table>
+
+## Limitation
+
+1. Does not support [Subscription](https://graphql.org/learn/subscriptions/). This package only intended for query and mutation.
+2. No support for [Variables](https://graphql.org/learn/queries/#variables). This package use String interpolation for passing variables.
 
 ## Getting started
 
@@ -149,6 +191,17 @@ class UserResponseConfig with GqlResponseConfig {
   ];
 }
 ```
+
+## Disclaimer
+
+> This package was ported from my company internal GraphQL API client in frontend. The company is closing down at the time of this writing. And the code was wholly hand-written by me.
+>
+> This ported package was assisted with DeepSeek V4 Flash 0731 in [Pi Harness](https://pi.dev/). The AI usage was done on these parts:
+>
+> - example
+> - unit tests
+> - finding bugs
+> - [re-architecture](#re-architecture) (see below)
 
 ## Re-Architecture
 
